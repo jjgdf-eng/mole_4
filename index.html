@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Môle 4 — Port de Dunkerque</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ocean:#002D52;
+  --ocean-mid:#1A6FBF;
+  --ocean-light:#4A9FEF;
+  --ocean-glow:#6DBEFF;
+  --sand:#F5F1EB;
+  --sand2:#EDE8DF;
+  --sand3:#DDD6CA;
+  --rust:#D4541E;
+  --lime:#2DBF6A;
+  --amber:#F4A024;
+  --violet:#7B3FA0;
+  --teal:#0FA89A;
+  --text:#0E1C28;
+  --text2:#52697A;
+  --text3:#94AABB;
+  --border:rgba(0,45,82,0.10);
+  --border2:rgba(0,45,82,0.20);
+  --radius:10px;
+  --radius-lg:16px;
+  --shadow:0 2px 14px rgba(0,45,82,0.07);
+  --shadow-md:0 6px 28px rgba(0,45,82,0.12);
+  --font-display:'Syne',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+}
+@media(prefers-color-scheme:dark){:root{
+  --ocean:#001B33;
+  --ocean-mid:#1A6FBF;
+  --ocean-light:#4A9FEF;
+  --ocean-glow:#6DBEFF;
+  --sand:#0F1923;
+  --sand2:#172433;
+  --sand3:#1F3044;
+  --text:#E0EAF5;
+  --text2:#7A9EB8;
+  --text3:#3E607A;
+  --border:rgba(74,159,239,0.10);
+  --border2:rgba(74,159,239,0.20);
+  --shadow:0 2px 14px rgba(0,0,0,0.35);
+  --shadow-md:0 6px 28px rgba(0,0,0,0.45);
+}}
+body{font-family:var(--font-body);background:var(--sand);color:var(--text);font-size:14px;line-height:1.6;}
+
+/* ── LAYOUT ── */
+.app{display:flex;min-height:100vh}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:240px;min-width:240px;
+  background:var(--ocean);
+  display:flex;flex-direction:column;
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  box-shadow:4px 0 24px rgba(0,0,0,0.3);
+}
+.sb-logo{
+  padding:26px 20px 20px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  background:linear-gradient(160deg,rgba(74,159,239,0.08) 0%,transparent 60%);
+  position:relative;overflow:hidden;
+}
+.sb-logo::after{
+  content:'';position:absolute;top:-20px;right:-20px;
+  width:120px;height:120px;
+  background:radial-gradient(circle,rgba(74,159,239,0.12) 0%,transparent 70%);
+  pointer-events:none;
+}
+.sb-logo-badge{
+  display:inline-block;
+  font-size:9px;font-weight:700;letter-spacing:2.5px;
+  color:var(--ocean-light);text-transform:uppercase;
+  margin-bottom:8px;
+}
+.sb-logo-title{
+  font-family:var(--font-display);
+  font-size:22px;font-weight:800;color:#fff;
+  display:block;letter-spacing:-0.5px;line-height:1.1;
+}
+.sb-logo-sub{font-size:11px;color:rgba(255,255,255,0.45);margin-top:5px;display:block;font-weight:400}
+
+/* sidebar accent line */
+.sb-accent{height:2px;background:linear-gradient(90deg,var(--ocean-light),transparent);margin:0 20px 6px;}
+
+nav{flex:1;padding:8px 0 10px}
+.nav-section-label{
+  font-size:9px;font-weight:700;letter-spacing:2.5px;
+  color:rgba(255,255,255,0.25);text-transform:uppercase;
+  padding:14px 20px 5px;
+}
+.nav-btn{
+  width:100%;background:none;border:none;
+  padding:9px 14px 9px 16px;display:flex;align-items:center;gap:10px;
+  cursor:pointer;color:rgba(255,255,255,0.6);
+  font-family:var(--font-body);font-size:13px;font-weight:500;text-align:left;
+  border-left:3px solid transparent;
+  transition:all 0.2s;
+}
+.nav-btn:hover{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.9)}
+.nav-btn.active{
+  background:rgba(255,255,255,0.10);color:#fff;font-weight:600;
+  border-left-color:var(--ocean-light);
+}
+.nav-icon{
+  width:30px;height:30px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;flex-shrink:0;
+}
+.nav-sub{padding-left:54px;display:none}
+.nav-sub.open{display:block}
+.nav-sub a{
+  display:block;padding:5px 10px;font-size:12px;
+  color:rgba(255,255,255,0.4);cursor:pointer;border-radius:6px;
+  transition:all 0.15s;
+}
+.nav-sub a:hover{color:rgba(255,255,255,0.85);background:rgba(255,255,255,0.06)}
+.sb-footer{
+  padding:14px 20px;border-top:1px solid rgba(255,255,255,0.07);
+  font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:0.5px;
+}
+.sb-footer strong{display:block;color:rgba(255,255,255,0.45);font-size:11px;margin-bottom:2px}
+
+/* ── MAIN ── */
+.main{flex:1;overflow-y:auto;padding:28px 32px;background:var(--sand)}
+.section{display:none}
+.section.active{display:block;animation:fadeIn 0.35s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HEADER BLOCK ── */
+.header-block{
+  background:linear-gradient(145deg,var(--ocean) 0%,#0A4A8A 55%,#1A6FBF 100%);
+  border-radius:var(--radius-lg);
+  padding:32px 30px 28px;
+  margin-bottom:26px;
+  position:relative;overflow:hidden;
+  box-shadow:0 8px 40px rgba(0,45,82,0.25);
+}
+.header-block::before{
+  content:'';position:absolute;top:-60px;right:-60px;
+  width:280px;height:280px;
+  background:radial-gradient(circle,rgba(74,159,239,0.12) 0%,transparent 70%);
+}
+.header-block::after{
+  content:'';position:absolute;bottom:-80px;left:30px;
+  width:200px;height:200px;
+  background:radial-gradient(circle,rgba(255,255,255,0.04) 0%,transparent 70%);
+}
+.header-tag{
+  font-size:10px;font-weight:700;letter-spacing:3px;
+  color:var(--ocean-glow);text-transform:uppercase;
+  margin-bottom:12px;
+}
+.header-block h1{
+  font-family:var(--font-display);
+  font-size:30px;font-weight:800;color:#fff;
+  letter-spacing:-0.5px;line-height:1.15;margin-bottom:10px;
+}
+.header-block p{font-size:13px;color:rgba(255,255,255,0.55);font-weight:400}
+.header-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.header-chip{
+  background:rgba(255,255,255,0.10);
+  border:1px solid rgba(255,255,255,0.18);
+  border-radius:20px;padding:5px 14px;
+  font-size:11px;color:rgba(255,255,255,0.85);font-weight:500;
+  transition:background 0.2s;
+}
+.header-chip:hover{background:rgba(255,255,255,0.16)}
+
+/* ── SECTION HEADER ── */
+.sec-header{
+  display:flex;align-items:flex-start;gap:18px;
+  margin-bottom:22px;padding:20px 22px;
+  background:var(--sand2);
+  border-radius:var(--radius-lg);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+}
+.sec-num{
+  font-family:var(--font-display);
+  font-size:48px;font-weight:800;
+  color:var(--border2);line-height:1;min-width:60px;
+}
+.sec-tag{
+  display:inline-block;padding:3px 12px;
+  border-radius:20px;font-size:10px;font-weight:700;
+  margin-bottom:6px;color:#fff;letter-spacing:0.5px;
+  text-transform:uppercase;
+}
+.sec-title{font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--text)}
+.sec-desc{font-size:12px;color:var(--text2);margin-top:3px}
+
+/* ── KPI STRIP ── */
+.kpi-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:22px}
+.kpi-item{
+  background:var(--sand2);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:16px 12px;text-align:center;
+  box-shadow:var(--shadow);transition:transform 0.2s,box-shadow 0.2s;
+  cursor:default;
+}
+.kpi-item:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.kpi-val{font-family:var(--font-display);font-size:24px;font-weight:800;line-height:1}
+.kpi-label{font-size:10px;color:var(--text2);margin-top:4px;font-weight:500;letter-spacing:0.3px}
+
+/* ── CARDS GRID ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.card{
+  background:var(--sand2);border:1px solid var(--border);
+  border-radius:var(--radius-lg);overflow:hidden;
+  box-shadow:var(--shadow);transition:box-shadow 0.2s,transform 0.2s;
+}
+.card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.card-stripe{height:4px}
+.banner{
+  height:150px;background:var(--sand3);cursor:pointer;
+  position:relative;display:flex;align-items:center;
+  justify-content:center;overflow:hidden;
+}
+.banner img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s ease}
+.banner:hover img{transform:scale(1.04)}
+.banner-placeholder{text-align:center;color:var(--text3);pointer-events:none}
+.banner-placeholder i{font-size:34px;display:block;margin-bottom:6px;opacity:0.5}
+.banner-placeholder p{font-size:11px;font-weight:500;opacity:0.7}
+.banner-tag{
+  position:absolute;top:10px;left:10px;
+  padding:3px 10px;border-radius:20px;
+  font-size:10px;color:#fff;font-weight:700;letter-spacing:0.5px;
+  backdrop-filter:blur(6px);
+}
+.banner-num{
+  position:absolute;top:10px;right:10px;
+  background:rgba(0,0,0,0.5);color:#fff;
+  padding:3px 8px;border-radius:10px;font-size:11px;font-weight:700;
+}
+.banner-change{
+  position:absolute;bottom:10px;right:10px;
+  background:rgba(0,0,0,0.6);color:#fff;border:none;
+  padding:5px 10px;border-radius:8px;font-size:10px;cursor:pointer;
+  display:flex;align-items:center;gap:5px;backdrop-filter:blur(4px);
+  transition:background 0.2s;opacity:0;
+}
+.banner:hover .banner-change{opacity:1}
+.banner-change:hover{background:rgba(0,0,0,0.85)}
+.card-body{padding:14px}
+.card-title{
+  font-family:var(--font-display);
+  font-size:13px;font-weight:700;cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;
+  color:var(--text);user-select:none;
+}
+.card-content{
+  display:none;font-size:12px;line-height:1.75;color:var(--text2);
+  margin-top:10px;padding-top:10px;border-top:1px solid var(--border);
+}
+.card.open .card-content{display:block}
+
+/* ── FINANCE CARDS ── */
+.finance-card{
+  background:var(--sand2);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:20px;margin-bottom:14px;
+  box-shadow:var(--shadow);transition:box-shadow 0.2s;
+}
+.finance-card:hover{box-shadow:var(--shadow-md)}
+.finance-head{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.finance-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.finance-label{font-size:10px;color:var(--text2);font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+.finance-title{font-family:var(--font-display);font-size:15px;font-weight:700}
+.finance-amount{
+  font-family:var(--font-display);
+  font-size:34px;font-weight:800;
+  color:var(--text);margin:8px 0;
+}
+.finance-sub{font-size:11px;color:var(--text2);margin-bottom:12px}
+.finance-items{padding-left:16px;font-size:12px;color:var(--text2);line-height:2.1}
+.bar{height:8px;background:var(--sand3);border-radius:4px;margin-top:12px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;transition:width 0.8s ease}
+
+/* ── PHASE CARDS ── */
+.phase-timeline{border-left:2px solid var(--border2);margin-left:10px}
+.phase-card{
+  background:var(--sand2);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:20px 20px 20px 24px;
+  margin-bottom:16px;position:relative;
+  box-shadow:var(--shadow);margin-left:16px;
+}
+.phase-dot{
+  width:16px;height:16px;border-radius:50%;
+  background:var(--ocean-mid);
+  position:absolute;left:-25px;top:24px;
+  border:3px solid var(--sand);
+  box-shadow:0 0 0 2px var(--ocean-mid);
+}
+.phase-num{font-size:9px;font-weight:700;color:var(--ocean-light);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:5px}
+.phase-title{font-family:var(--font-display);font-size:17px;font-weight:700}
+.phase-years{font-size:12px;color:var(--text2);margin-bottom:14px;font-weight:500}
+.phase-tasks{padding-left:0;list-style:none;font-size:12px;color:var(--text2);line-height:2.1}
+
+/* ── ENERGY CARDS ── */
+.energy-card{
+  background:var(--sand2);border:1px solid var(--border);
+  border-radius:var(--radius-lg);overflow:hidden;
+  box-shadow:var(--shadow);transition:box-shadow 0.2s;
+}
+.energy-card:hover{box-shadow:var(--shadow-md)}
+.energy-head{display:flex;align-items:center;gap:12px;padding:16px 16px 0}
+.energy-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.energy-title{font-family:var(--font-display);font-size:14px;font-weight:700}
+.energy-sub{font-size:11px;color:var(--text2);font-weight:500}
+.energy-val{font-family:var(--font-display);font-size:30px;font-weight:800;padding:10px 16px 0;color:var(--text)}
+.energy-points{padding:8px 16px 16px 30px;font-size:11px;color:var(--text2);line-height:2}
+
+/* ── ODD GRID ── */
+.odd-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.odd-card{
+  border-radius:var(--radius-lg);padding:18px;cursor:pointer;
+  transition:transform 0.25s,box-shadow 0.25s;
+  box-shadow:0 4px 18px rgba(0,0,0,0.18);
+}
+.odd-card:hover{transform:translateY(-4px);box-shadow:0 10px 32px rgba(0,0,0,0.25)}
+.odd-badge{font-size:9px;font-weight:700;color:rgba(255,255,255,0.65);margin-bottom:8px;letter-spacing:1.5px;text-transform:uppercase}
+.odd-num{font-family:var(--font-display);font-size:48px;font-weight:800;color:rgba(255,255,255,0.15);line-height:1}
+.odd-icon{font-size:26px;display:block;margin:6px 0}
+.odd-title{font-family:var(--font-display);font-size:13px;font-weight:700;color:#fff;margin-bottom:5px}
+.odd-desc{display:none;font-size:11px;color:rgba(255,255,255,0.88);line-height:1.7}
+.odd-card.open .odd-desc{display:block}
+.odd-card.open .odd-num{display:none}
+
+/* ── MOB KPI ── */
+.mob-kpi{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.mob-kpi-item{
+  background:var(--sand3);border-radius:8px;
+  padding:7px 12px;text-align:center;border:1px solid var(--border);
+}
+.mob-kpi-val{font-family:var(--font-display);font-size:15px;font-weight:800;color:var(--text)}
+.mob-kpi-label{font-size:10px;color:var(--text2);font-weight:500}
+
+/* ── LIGHTBOX ── */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.93);z-index:999;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.lightbox.active{display:flex}
+.lightbox img{max-width:90%;max-height:90%;border-radius:14px;object-fit:contain;box-shadow:0 24px 80px rgba(0,0,0,0.6)}
+.lb-close{
+  position:fixed;top:20px;right:20px;
+  background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);
+  color:#fff;width:42px;height:42px;border-radius:50%;cursor:pointer;
+  font-size:20px;display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(6px);transition:background 0.2s;
+}
+.lb-close:hover{background:rgba(255,255,255,0.25)}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:28px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--ocean);color:#fff;
+  border:1px solid rgba(255,255,255,0.15);
+  padding:11px 22px;border-radius:28px;font-size:12px;font-weight:500;
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  z-index:1000;pointer-events:none;
+  box-shadow:0 8px 28px rgba(0,0,0,0.3);
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ── BUDGET OVERVIEW ── */
+.budget-overview{
+  background:linear-gradient(145deg,var(--ocean) 0%,#0A4A8A 60%,#1A6FBF 100%);
+  border-radius:var(--radius-lg);padding:22px;
+  margin-bottom:16px;position:relative;overflow:hidden;
+  box-shadow:0 8px 40px rgba(0,45,82,0.25);
+}
+.budget-overview::before{
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:180px;height:180px;
+  background:radial-gradient(circle,rgba(74,159,239,0.12) 0%,transparent 70%);
+}
+.budget-label{font-size:10px;font-weight:700;letter-spacing:2.5px;color:rgba(255,255,255,0.45);text-transform:uppercase;margin-bottom:4px}
+.budget-amount{font-family:var(--font-display);font-size:44px;font-weight:800;color:#fff;line-height:1}
+.budget-sub{font-size:11px;color:rgba(255,255,255,0.45);margin-top:4px;margin-bottom:18px}
+.budget-legend{display:flex;flex-direction:column;gap:6px}
+.budget-legend-row{display:flex;align-items:center;justify-content:space-between;font-size:12px}
+.budget-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.budget-legend-label{color:rgba(255,255,255,0.8);display:flex;align-items:center;gap:7px;flex:1}
+.budget-legend-val{font-weight:700;color:#fff}
+.budget-bar-track{height:12px;background:rgba(255,255,255,0.12);border-radius:6px;margin-top:14px;overflow:hidden}
+
+/* ── SAVE INSTRUCTIONS ── */
+.save-banner{
+  background:linear-gradient(135deg,rgba(26,111,191,0.12),rgba(45,191,106,0.08));
+  border:1px solid rgba(26,111,191,0.2);
+  border-radius:var(--radius-lg);padding:16px 20px;
+  margin-bottom:22px;display:flex;align-items:flex-start;gap:12px;
+}
+.save-banner-icon{font-size:22px;flex-shrink:0;margin-top:1px}
+.save-banner h3{font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
+.save-banner p{font-size:12px;color:var(--text2);line-height:1.6}
+.save-banner code{background:var(--sand3);padding:1px 6px;border-radius:4px;font-size:11px;font-family:monospace}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){
+  .sidebar{width:58px;min-width:58px}
+  .sb-logo-title,.sb-logo-sub,.sb-logo-badge,.nav-btn span:not(.nav-icon),.nav-sub,.sb-footer,.nav-section-label{display:none}
+  .nav-btn{justify-content:center;padding:12px}
+  .kpi-strip{grid-template-columns:repeat(3,1fr)}
+  .odd-grid{grid-template-columns:1fr 1fr}
+  .main{padding:14px 16px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-badge">Port de Dunkerque</div>
+      <span class="sb-logo-title">MÔLE 4</span>
+      <small class="sb-logo-sub">Projet Urbain 2025–2032</small>
+    </div>
+    <div class="sb-accent"></div>
+    <nav id="nav"></nav>
+    <div class="sb-footer">
+      <strong>Môle 4</strong>
+      Poster interactif · v2025
+    </div>
+  </div>
+  <div class="main" id="main"></div>
+</div>
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" onclick="closeLightbox()">✕</button>
+  <img id="lb-img" src="" alt="">
+</div>
+<div class="toast" id="toast"></div>
+
+<!-- 
+  ╔══════════════════════════════════════════════════════════╗
+  ║  IMAGES PERMANENTES — COMMENT AJOUTER UNE PHOTO         ║
+  ║  1. Ouvrez ce fichier dans un éditeur texte              ║
+  ║  2. Cherchez : data-img-id="VOTRE_ID"                    ║
+  ║  3. Convertissez votre image en base64 sur :             ║
+  ║     https://www.base64-image.de/                         ║
+  ║  4. Collez la valeur base64 dans data-img-src="..."      ║
+  ║  5. Sauvegardez et commitez sur GitHub                   ║
+  ╚══════════════════════════════════════════════════════════╝
+
+  LISTE DES IDs D'IMAGES :
+  Section 1 : b1, b2, b3, b4, b5
+  Section 3 : ph1img, ph2img, ph3img
+  Section 4 : m1, m2, m3
+  Section 5 : e1img, e2img, e3img, e4img
+-->
+
+<!-- IMAGE DATA STORE — Modifiez data-img-src pour chaque ID -->
+<div id="img-store" style="display:none">
+  <span data-img-id="b1" data-img-src=""></span>
+  <span data-img-id="b2" data-img-src=""></span>
+  <span data-img-id="b3" data-img-src=""></span>
+  <span data-img-id="b4" data-img-src=""></span>
+  <span data-img-id="b5" data-img-src=""></span>
+  <span data-img-id="ph1img" data-img-src=""></span>
+  <span data-img-id="ph2img" data-img-src=""></span>
+  <span data-img-id="ph3img" data-img-src=""></span>
+  <span data-img-id="m1" data-img-src=""></span>
+  <span data-img-id="m2" data-img-src=""></span>
+  <span data-img-id="m3" data-img-src=""></span>
+  <span data-img-id="e1img" data-img-src=""></span>
+  <span data-img-id="e2img" data-img-src=""></span>
+  <span data-img-id="e3img" data-img-src=""></span>
+  <span data-img-id="e4img" data-img-src=""></span>
+</div>
+
+<script>
+const NAV=[
+  {n:1,icon:'🏙️',label:"Vue d'ensemble",color:'rgba(212,84,30,0.22)',sub:[
+    {icon:'🗺️',label:'Vue générale',el:'b1'},{icon:'🏠',label:'Habitat & Services',el:'b2'},
+    {icon:'🌿',label:'Parc',el:'b3'},{icon:'🏥',label:'Pôle Médical',el:'b4'},{icon:'🎓',label:'Formation',el:'b5'}
+  ]},
+  {n:2,icon:'💰',label:'Financement',color:'rgba(26,111,191,0.22)',sub:[
+    {icon:'🇪🇺',label:'FEDER / Interreg',el:'f1'},{icon:'🏛️',label:'Collectivités',el:'f2'},
+    {icon:'🏗️',label:'Privé',el:'f3'},{icon:'🌿',label:'Fonds verts',el:'f4'}
+  ]},
+  {n:3,icon:'🔨',label:'Réaménagement',color:'rgba(45,191,106,0.22)',sub:[
+    {icon:'📅',label:'Phase 1',el:'ph1'},{icon:'📅',label:'Phase 2',el:'ph2'},{icon:'📅',label:'Phase 3',el:'ph3'}
+  ]},
+  {n:4,icon:'🚌',label:'Accès & Mobilités',color:'rgba(123,63,160,0.22)',sub:[
+    {icon:'🚌',label:'Transport',el:'m1'},{icon:'🚲',label:'Mobilités douces',el:'m2'},{icon:'🚗',label:'Stationnement',el:'m3'}
+  ]},
+  {n:5,icon:'⚡',label:'Énergie',color:'rgba(244,160,36,0.22)',sub:[
+    {icon:'🌊',label:'Houlomotrice',el:'e1'},{icon:'♻️',label:'Réduction',el:'e2'},
+    {icon:'🔗',label:'Innovation',el:'e3'},{icon:'🚰',label:'Traitement eau',el:'e4'}
+  ]},
+  {n:6,icon:'🌍',label:'ODD',color:'rgba(15,168,154,0.22)',sub:[]}
+];
+
+let activeSection=1, openSubs=new Set([1]), openBlocks=new Set(), openOdds=new Set(), toastTimer=null;
+
+/* ── IMAGE SYSTEM (HTML-based, GitHub compatible) ── */
+function loadImages(){
+  const store={};
+  document.querySelectorAll('#img-store span').forEach(el=>{
+    const id=el.getAttribute('data-img-id');
+    const src=el.getAttribute('data-img-src');
+    if(id&&src) store[id]=src;
+  });
+  return store;
+}
+
+function getImages(){return loadImages();}
+
+/* Upload flow: shows an in-memory preview AND instructions to save permanently */
+const sessionImages={};
+
+function handleFile(id,file){
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    sessionImages[id]=ev.target.result;
+    showToast('✓ Photo chargée (session) — voir instructions pour la conserver');
+    renderAll();
+  };
+  reader.readAsDataURL(file);
+}
+
+function getImage(id){return sessionImages[id]||getImages()[id]||null;}
+
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),3000);
+}
+function openLightbox(src){document.getElementById('lb-img').src=src;document.getElementById('lightbox').classList.add('active');}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('active');}
+document.getElementById('lightbox').addEventListener('click',function(e){if(e.target===this)closeLightbox();});
+
+function makeBanner(id,tag,tagColor,num,style=''){
+  const img=getImage(id);
+  return `<div class="banner" style="${style}" onclick="bannerClick('${id}')">
+    ${img
+      ?`<img src="${img}" alt=""><button class="banner-change" onclick="event.stopPropagation();document.getElementById('fi-${id}').click()"><i class="ti ti-upload" style="font-size:11px"></i> Changer</button>`
+      :`<div class="banner-placeholder"><i class="ti ti-photo-plus"></i><p>Ajouter une photo</p></div>`}
+    ${tag?`<span class="banner-tag" style="background:${tagColor}">${tag}</span>`:''}
+    ${num?`<span class="banner-num">${num}</span>`:''}
+    <input type="file" accept="image/*" id="fi-${id}" style="display:none" onchange="handleFile('${id}',this.files[0])">
+  </div>`;
+}
+
+function bannerClick(id){const img=getImage(id);if(img)openLightbox(img);else document.getElementById('fi-'+id).click();}
+function showSection(n){activeSection=n;openSubs=new Set([n]);renderAll();document.querySelector('.main').scrollTo({top:0,behavior:'smooth'});}
+function scrollToEl(id){setTimeout(()=>{const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},100);}
+function toggleBlock(id){openBlocks.has(id)?openBlocks.delete(id):openBlocks.add(id);renderAll();}
+function toggleOdd(idx){openOdds.has(idx)?openOdds.delete(idx):openOdds.add(idx);renderAll();}
+
+function saveBanner(){
+  return `<div class="save-banner">
+    <div class="save-banner-icon">💾</div>
+    <div>
+      <h3>Conserver les photos définitivement sur GitHub Pages</h3>
+      <p>Les images chargées ici sont temporaires (session). Pour les rendre permanentes :<br>
+      1. Convertissez vos images sur <strong>base64-image.de</strong><br>
+      2. Ouvrez <code>index.html</code> et cherchez <code>data-img-id="votre_id"</code><br>
+      3. Collez la valeur base64 dans <code>data-img-src="..."</code><br>
+      4. Commitez sur GitHub — c'est permanent ✓</p>
+    </div>
+  </div>`;
+}
+
+function renderNav(){
+  document.getElementById('nav').innerHTML=`<div class="nav-section-label">Sections</div>`+NAV.map(item=>`
+    <div>
+      <button class="nav-btn ${activeSection===item.n?'active':''}" onclick="showSection(${item.n})">
+        <span class="nav-icon" style="background:${item.color}">${item.icon}</span>
+        <span style="flex:1">${item.label}</span>
+        ${item.sub.length?`<i class="ti ti-chevron-${openSubs.has(item.n)?'up':'down'}" style="font-size:12px;color:rgba(255,255,255,0.3)"></i>`:''}
+      </button>
+      <div class="nav-sub ${openSubs.has(item.n)?'open':''}">
+        ${item.sub.map(s=>`<a onclick="showSection(${item.n});scrollToEl('${s.el}')">${s.icon} ${s.label}</a>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function sec1(){
+  const cards=[
+    {id:'b1',num:'01',tag:'Urbanisme',tc:'#D4541E',title:"Vue d'ensemble du site",content:"Le Môle 4 s'étend sur une friche portuaire de plus de <strong>20 hectares</strong>. Le projet ambitionne de créer un <strong>quartier mixte, connecté et durable</strong>. Habitat, santé, formation, espaces verts et services coexistent au sein d'un même ensemble urbain pensé pour 2032."},
+    {id:'b2',num:'02',tag:'Habitat',tc:'#D4541E',title:'Habitat, Repos & Services',content:"<strong>250 logements</strong> modernes en deux tranches. <strong>Maison de repos</strong> de 3 700 m² accessible, parking 185 places. <strong>Supérette & pharmacie</strong> intégrées pour résidents et salariés."},
+    {id:'b3',num:'03',tag:'Nature',tc:'#2DBF6A',title:'Parc & Promenade',content:"Plus de <strong>10 ha</strong> d'espaces verts dédiés à la biodiversité. Promenade douce le long du quai pour piétons et cyclistes. Noues paysagères, îlots de fraîcheur et zones humides. Labellisé REV3."},
+    {id:'b4',num:'04',tag:'Santé',tc:'#1A6FBF',title:'Pôle Médical',content:"<strong>Centre médical de 20 000 m²</strong> sur R+3 : généralistes, spécialistes et plateau technique. Accès PMR. Urgences de proximité et téléconsultation intégrées."},
+    {id:'b5',num:'05',tag:'Formation',tc:'#7B3FA0',title:'Centre de Formation',content:"<strong>4 000 m²</strong> dédiés aux métiers techniques et portuaires. Ateliers pratiques, simulateurs de conduite. Partenariats avec le Grand Port Maritime et la Région Hauts-de-France."},
+  ];
+  return `${saveBanner()}
+  <div class="kpi-strip">
+    <div class="kpi-item"><div class="kpi-val" style="color:#D4541E">20 ha</div><div class="kpi-label">Surface totale</div></div>
+    <div class="kpi-item"><div class="kpi-val" style="color:#1A6FBF">250</div><div class="kpi-label">Logements</div></div>
+    <div class="kpi-item"><div class="kpi-val" style="color:#2DBF6A">10 ha</div><div class="kpi-label">Espaces verts</div></div>
+    <div class="kpi-item"><div class="kpi-val" style="color:#7B3FA0">6</div><div class="kpi-label">Pôles</div></div>
+    <div class="kpi-item"><div class="kpi-val" style="color:#0FA89A">2032</div><div class="kpi-label">Livraison</div></div>
+  </div>
+  <div class="grid">${cards.map(c=>`
+    <div id="${c.id}" class="card${openBlocks.has(c.id)?' open':''}">
+      <div class="card-stripe" style="background:${c.tc}"></div>
+      ${makeBanner(c.id,c.tag,c.tc,c.num)}
+      <div class="card-body">
+        <div class="card-title" onclick="toggleBlock('${c.id}')">${c.title}
+          <i class="ti ti-${openBlocks.has(c.id)?'minus':'plus'}" style="font-size:14px;flex-shrink:0;color:var(--text3)"></i>
+        </div>
+        <div class="card-content">${c.content}</div>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+function sec2(){
+  const cards=[
+    {id:'f1',icon:'🇪🇺',bg:'rgba(26,111,191,0.12)',label:'Fonds européens',title:'FEDER / Interreg',amount:'14 M€',sub:"Fonds de développement régional · Appel à projets 2024–2027",items:['Réhabilitation de la friche portuaire','Infrastructures vertes et biodiversité','Mobilités douces et espaces publics'],pct:'29%',bar:'linear-gradient(90deg,#1A6FBF,#4A9FEF)'},
+    {id:'f2',icon:'🏛️',bg:'rgba(45,191,106,0.12)',label:'Collectivités locales',title:'CUD & Région HdF',amount:'8 M€',sub:'CUD + Région Hauts-de-France · CPER 2021–2027',items:["CUD : 5 M€ — voirie, réseaux, espaces publics","Région : 3 M€ — formation, attractivité"],pct:'19%',bar:'linear-gradient(90deg,#2DBF6A,#5ADE90)'},
+    {id:'f3',icon:'🏗️',bg:'rgba(212,84,30,0.12)',label:'Investissement privé',title:'Promoteurs & exploitants',amount:'18 M€',sub:"Partenariats public-privé · Appels à projets urbains innovants",items:["Résidences (1re et 2e tranche) : 9 M€","Centre médical : 5 M€","Maison de repos & commerces : 4 M€"],pct:'43%',bar:'linear-gradient(90deg,#D4541E,#F4804A)'},
+    {id:'f4',icon:'🌿',bg:'rgba(123,63,160,0.12)',label:'Fonds verts',title:'ADEME & Dotation État',amount:'9 M€',sub:'Fonds vert 2024 · REV3 · OFB · ADEME',items:['Centrale houlomotrice 200 kW','Station traitement eau de mer','Végétalisation & biodiversité'],pct:'18%',bar:'linear-gradient(90deg,#7B3FA0,#BE84DD)'},
+  ];
+  return `<div class="budget-overview">
+    <div class="budget-label">Budget total estimé</div>
+    <div class="budget-amount">49 M€</div>
+    <div class="budget-sub">Estimation 2025 · Hors foncier portuaire</div>
+    <div class="budget-legend">
+      ${[['#1A6FBF','FEDER / Interreg','14 M€'],['#2DBF6A','Collectivités','8 M€'],['#D4541E','Privé','18 M€'],['#7B3FA0','Fonds verts','9 M€']].map(([c,l,v])=>`
+      <div class="budget-legend-row">
+        <span class="budget-legend-label"><span class="budget-legend-dot" style="background:${c}"></span>${l}</span>
+        <span class="budget-legend-val">${v}</span>
+      </div>`).join('')}
+      <div class="budget-bar-track"><div style="height:100%;border-radius:6px;background:linear-gradient(90deg,#1A6FBF 0% 29%,#2DBF6A 29% 45%,#D4541E 45% 82%,#7B3FA0 82% 100%)"></div></div>
+    </div>
+  </div>
+  ${cards.map(c=>`
+    <div id="${c.id}" class="finance-card">
+      <div class="finance-head">
+        <div class="finance-icon" style="background:${c.bg}">${c.icon}</div>
+        <div><div class="finance-label">${c.label}</div><div class="finance-title">${c.title}</div></div>
+      </div>
+      <div class="finance-amount">${c.amount}</div>
+      <div class="finance-sub">${c.sub}</div>
+      <ul class="finance-items">${c.items.map(i=>`<li>${i}</li>`).join('')}</ul>
+      <div class="bar"><div class="bar-fill" style="width:${c.pct};background:${c.bar}"></div></div>
+      <div style="font-size:10px;color:var(--text3);margin-top:5px;text-align:right;font-weight:600">${c.pct} du budget</div>
+    </div>`).join('')}`;
+}
+
+function sec3(){
+  const phases=[
+    {id:'ph1',imgId:'ph1img',num:'PHASE 1',title:'Dépollution & Infrastructures',years:'2025 — 2027',dotColor:'#D4541E',tasks:['🔬 Études géotechniques et diagnostic environnemental','🚧 Dépollution des terres et désamiantage','🛣️ Création des voiries principales et réseaux','🚌 Aménagement entrée principale et raquette bus','🌱 Premières plantations structurantes du parc']},
+    {id:'ph2',imgId:'ph2img',num:'PHASE 2',title:'Construction des équipements',years:'2027 — 2029',dotColor:'#1A6FBF',tasks:["🎓 Centre de formation 4 000 m² — T2 2028","🏥 Centre médical 20 000 m² R+3 — T4 2028","🏠 Résidences 1re tranche (130 logements) — T1 2029","🛌 Maison de repos 3 700 m² — T2 2029","🚗 Parking logistique 268 places — T2 2029"]},
+    {id:'ph3',imgId:'ph3img',num:'PHASE 3',title:'Finitions & Inauguration',years:'2029 — 2032',dotColor:'#2DBF6A',tasks:["🏠 2e tranche de logements (120 unités) — T1 2031","🛒 Commerces de proximité (supérette, pharmacie)","🌳 Aménagement complet du parc et promenade quai","🔌 Connexion smart grid et réseau de chaleur","🎉 Inauguration officielle du quartier — 2032"]},
+  ];
+  return `<div class="phase-timeline">
+    ${phases.map(p=>`
+      <div id="${p.id}" class="phase-card">
+        <div class="phase-dot" style="background:${p.dotColor};box-shadow:0 0 0 2px ${p.dotColor}"></div>
+        <div class="phase-num">${p.num}</div>
+        <div class="phase-title">${p.title}</div>
+        <div class="phase-years">${p.years}</div>
+        ${makeBanner(p.imgId,'','','')}
+        <ul class="phase-tasks" style="margin-top:12px">${p.tasks.map(t=>`<li>${t}</li>`).join('')}</ul>
+      </div>`).join('')}
+  </div>`;
+}
+
+function sec4(){
+  const cards=[
+    {id:'m1',tag:'Transport',tc:'#7B3FA0',title:'Transport en commun',content:"Voie de bus à double sens traversant le site. Connexion directe aux lignes <strong>DK'Bus</strong> (lignes 2, 4 et C1). Fréquence renforcée aux heures de pointe (toutes les 10 min).",kpi:[{val:'3',l:'Lignes bus'},{val:"10'",l:'Fréquence'},{val:"8'",l:'Vers centre'}]},
+    {id:'m2',tag:'Doux',tc:'#2DBF6A',title:'Mobilités douces',content:"<strong>Piste cyclable sécurisée de 2,8 km</strong> raccordée au REVe dunkerquois. Promenade piétonne le long du quai. 80 arceaux vélos sécurisés et 2 stations de réparation.",kpi:[{val:'2,8 km',l:'Piste cyclable'},{val:'80',l:'Arceaux vélo'}]},
+    {id:'m3',tag:'Stationnement',tc:'#5A6B7B',title:'Stationnement & Logistique',content:"<strong>268 places au total</strong> : 100 personnel, 168 visiteurs. <strong>20 bornes de recharge</strong> électrique (50 kW). Voie dédiée livraisons et pompiers.",kpi:[{val:'268',l:'Places auto'},{val:'20',l:'Bornes élec.'},{val:'185',l:'Maison repos'}]},
+  ];
+  return `<div class="grid">${cards.map(c=>`
+    <div id="${c.id}" class="card${openBlocks.has(c.id)?' open':''}">
+      <div class="card-stripe" style="background:${c.tc}"></div>
+      ${makeBanner(c.id,c.tag,c.tc,'')}
+      <div class="card-body">
+        <div class="card-title" onclick="toggleBlock('${c.id}')">${c.title}
+          <i class="ti ti-${openBlocks.has(c.id)?'minus':'plus'}" style="font-size:14px;flex-shrink:0;color:var(--text3)"></i>
+        </div>
+        <div class="card-content">${c.content}
+          <div class="mob-kpi">${c.kpi.map(k=>`<div class="mob-kpi-item"><div class="mob-kpi-val">${k.val}</div><div class="mob-kpi-label">${k.l}</div></div>`).join('')}</div>
+        </div>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+function sec5(){
+  const cards=[
+    {id:'e1',imgId:'e1img',icon:'🌊',bg:'rgba(26,111,191,0.15)',title:'Centrale houlomotrice',sub:'Énergie des vagues du port',val:'200 kW',pct:'45%',bar:'linear-gradient(90deg,#1A6FBF,#4A9FEF)',points:['Convertisseurs oscillants immergés dans le bassin','Production estimée : 1 400 MWh/an','Projet pilote unique en France en milieu portuaire','Mise en service : T3 2029 — partenariat IFREMER']},
+    {id:'e2',imgId:'e2img',icon:'♻️',bg:'rgba(45,191,106,0.15)',title:'Réduction des consommations',sub:'Bâtiments BBC & passifs',val:'−40 %',pct:'40%',bar:'linear-gradient(90deg,#2DBF6A,#5ADE90)',points:['Isolation renforcée (ouate de cellulose 200 mm)','VMC double-flux à récupération de chaleur','Éclairage LED intelligent et capteurs de présence','Objectif : RE2020 + niveau E3 C2']},
+    {id:'e3',imgId:'e3img',icon:'🔗',bg:'rgba(26,111,191,0.15)',title:'Innovation & Réseau',sub:'Chaleur portuaire & hydrogène',val:'REV3',pct:'55%',bar:'linear-gradient(90deg,#003D6B,#1A6FBF)',points:["Connexion au réseau de chaleur du port","Étude hydrogène vert (2027)","Smart grid et gestion intelligente","Neutralité carbone opérationnelle en 2032"]},
+    {id:'e4',imgId:'e4img',icon:'🚰',bg:'rgba(15,168,154,0.15)',title:"Traitement de l'eau de mer",sub:'Station pilote dessalement',val:'500 m³/j',pct:'60%',bar:'linear-gradient(90deg,#0FA89A,#5AE0D8)',points:["Osmose inverse sur eau de mer du bassin portuaire","Capacité : 500 m³/jour — usage industriel & arrosage","Alimentation par la centrale houlomotrice","Mise en service : T1 2030 — partenariat Veolia & IFREMER"]},
+  ];
+  return `<div class="grid">${cards.map(c=>`
+    <div id="${c.id}" class="energy-card">
+      <div class="energy-head">
+        <div class="energy-icon" style="background:${c.bg}">${c.icon}</div>
+        <div><div class="energy-title">${c.title}</div><div class="energy-sub">${c.sub}</div></div>
+      </div>
+      ${makeBanner(c.imgId,'','','','border-radius:0')}
+      <div class="energy-val">${c.val}</div>
+      <div class="bar" style="margin:4px 16px 0"><div class="bar-fill" style="width:${c.pct};background:${c.bar}"></div></div>
+      <ul class="energy-points">${c.points.map(p=>`<li>${p}</li>`).join('')}</ul>
+    </div>`).join('')}</div>`;
+}
+
+function sec6(){
+  const odds=[
+    {idx:0,badge:'ODD 3',num:'3',icon:'❤️',color:'linear-gradient(135deg,#3D8A2C,#4C9F38)',title:'Bonne santé & bien-être',desc:"Le pôle médical de 20 000 m² améliore l'accès aux soins. Espaces verts et promenade favorisent la santé mentale et physique."},
+    {idx:1,badge:'ODD 4',num:'4',icon:'📚',color:'linear-gradient(135deg,#A01225,#C5192D)',title:'Éducation de qualité',desc:"Centre de formation de 4 000 m² pour les métiers techniques portuaires. Partenariats avec les entreprises locales et la Région."},
+    {idx:2,badge:'ODD 6',num:'6',icon:'💧',color:'linear-gradient(135deg,#1A9DB8,#26BDE2)',title:'Eau propre & assainissement',desc:"Station pilote de traitement de l'eau de mer. Gestion zéro rejet des eaux pluviales via noues paysagères et bassins de rétention."},
+    {idx:3,badge:'ODD 7',num:'7',icon:'⚡',color:'linear-gradient(135deg,#D4990A,#FCC30B)',title:'Énergie propre & abordable',desc:"Centrale houlomotrice 200 kW, réseau de chaleur REV3, smart grid. Objectif d'autonomie énergétique partielle dès 2029."},
+    {idx:4,badge:'ODD 8',num:'8',icon:'💼',color:'linear-gradient(135deg,#7A1232,#A21942)',title:'Travail décent & croissance',desc:"400+ emplois directs et indirects. Ancrage de l'économie locale dunkerquoise et valorisation des filières portuaires."},
+    {idx:5,badge:'ODD 12',num:'12',icon:'♻️',color:'linear-gradient(135deg,#9A6E20,#BF8B2E)',title:'Production responsable',desc:"Bâtiments bas-carbone avec matériaux biosourcés. 90 % de valorisation des déchets de chantier. Économie circulaire sur le site."},
+  ];
+  return `<div class="odd-grid">${odds.map(o=>`
+    <div class="odd-card${openOdds.has(o.idx)?' open':''}" style="background:${o.color}" onclick="toggleOdd(${o.idx})">
+      <div class="odd-badge">${o.badge}</div>
+      ${!openOdds.has(o.idx)?`<div class="odd-num">${o.num}</div>`:''}
+      <span class="odd-icon">${o.icon}</span>
+      <div class="odd-title">${o.title}</div>
+      <div class="odd-desc">${o.desc}</div>
+    </div>`).join('')}</div>`;
+}
+
+function renderAll(){
+  renderNav();
+  const SECS=[
+    {n:1,tag:"Vue d'ensemble",color:'#D4541E',title:'Le projet Môle 4',desc:'Un nouveau quartier mixte et durable sur une friche portuaire de 20 ha à Dunkerque',fn:sec1},
+    {n:2,tag:'Financement',color:'#1A6FBF',title:'Plan de financement',desc:'Enveloppe globale estimée à 49 M€ — mix public / privé / européen',fn:sec2},
+    {n:3,tag:'Réaménagement',color:'#2DBF6A',title:'Phasage des travaux',desc:'Trois phases progressives de 2025 à 2032 pour transformer le Môle 4',fn:sec3},
+    {n:4,tag:'Mobilités',color:'#7B3FA0',title:'Accès & Mobilités',desc:'Une desserte multimodale pour un quartier accessible à tous',fn:sec4},
+    {n:5,tag:'Énergie',color:'#F4A024',title:'Stratégie énergétique',desc:'Un quartier bas-carbone inscrit dans la 3e Révolution Industrielle',fn:sec5},
+    {n:6,tag:'Durabilité',color:'#0FA89A',title:'Objectifs de Développement Durable',desc:"6 ODD de l'ONU auxquels le projet Môle 4 contribue directement",fn:sec6},
+  ];
+  document.getElementById('main').innerHTML=`
+    <div class="header-block">
+      <div class="header-tag">Poster Interactif</div>
+      <h1>Projet Môle 4<br>Port de Dunkerque</h1>
+      <p>Reconversion urbaine durable · 2025–2032 · 20 ha · 49 M€</p>
+      <div class="header-chips">
+        <span class="header-chip">🏙️ Quartier mixte</span>
+        <span class="header-chip">🌿 REV3</span>
+        <span class="header-chip">⚡ Bas-carbone</span>
+        <span class="header-chip">🌊 Houlomotrice</span>
+      </div>
+    </div>
+    ${SECS.map(s=>`
+      <div class="section${activeSection===s.n?' active':''}" id="sec${s.n}">
+        <div class="sec-header">
+          <div class="sec-num">0${s.n}</div>
+          <div>
+            <span class="sec-tag" style="background:${s.color}">${s.tag}</span>
+            <div class="sec-title">${s.title}</div>
+            <div class="sec-desc">${s.desc}</div>
+          </div>
+        </div>
+        ${s.fn()}
+      </div>`).join('')}`;
+}
+
+renderAll();
+</script>
+</body>
+</html>
